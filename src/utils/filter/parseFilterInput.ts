@@ -1,25 +1,24 @@
-import { Filter } from './Filter';
-import { OrFilter } from './OrFilter';
-import { AndFilter } from './AndFilter';
-import { AttributeFilter } from './AttributeFilter';
-import { TextFilterType } from './TextFilterType';
-import { ValueFilterType } from './ValueFilterType';
-import { SearchFilter } from './SearchFilter';
-import { ModeText, ModeValue } from './modes';
+import { Filter } from '../../types/filter/Filter';
+import { OrFilter } from '../../types/filter/OrFilter';
+import { AndFilter } from '../../types/filter/AndFilter';
+import { AttributeFilter } from '../../types/filter/AttributeFilter';
+import { TextCheckMode, TextFilterType } from '../../types/filter/TextFilterType';
+import { ValueCheckMode, ValueFilterType } from '../../types/filter/ValueFilterType';
+import { SearchFilter } from '../../types/filter/SearchFilter';
 
 function containLessGraterEqual(input: string): boolean {
     return input.includes('<') || input.includes('>') || input.includes('=');
 }
 
-function chooseTextMode(text: string): ModeText {
+function chooseTextMode(text: string): TextCheckMode {
     const firstPoint = text.indexOf('.');
     if (firstPoint === -1) {
-        return ModeText.Part;
+        return TextCheckMode.Part;
     }
     if (firstPoint !== text.length - 1) {
         throw new Error('Znak \'.\' może być użyty tylko na końcu wartości lub atrybutu');
     } else {
-        return ModeText.Exactly;
+        return TextCheckMode.Exactly;
     }
 }
 
@@ -30,28 +29,28 @@ function parseParameter (parameter: string):  Filter {
     }
     const textMode = chooseTextMode(parameter);
     parameter = parameter.replace('.', '').trim();
-    return new SearchFilter(new TextFilterType(parameter), textMode);
+    return new SearchFilter(new TextFilterType(parameter, textMode));
 }
 
-function chooseValueMode(text: string): ModeValue {
+function chooseValueMode(text: string): ValueCheckMode {
     const firstPoint = text.indexOf('.');
     if (firstPoint === -1) {
-        let returnType: ModeValue = ModeValue.Part;
+        let returnType: ValueCheckMode = ValueCheckMode.Part;
         if (text.indexOf('!=') === 0) {
             text = text.slice(2);
-            returnType = ModeValue.NotEq;
+            returnType = ValueCheckMode.NotEq;
         } else if (text.indexOf('<=') === 0) {
             text = text.slice(2);
-            returnType = ModeValue.LessEq;
+            returnType = ValueCheckMode.LessEq;
         } else if (text.indexOf('>=') === 0) {
             text = text.slice(2);
-            returnType = ModeValue.GraterEq;
+            returnType = ValueCheckMode.GraterEq;
         } else if (text.indexOf('>') === 0) {
             text = text.slice(1);
-            returnType = ModeValue.Grater;
+            returnType = ValueCheckMode.Grater;
         } else if (text.indexOf('<') === 0) {
             text = text.slice(1);
-            returnType = ModeValue.Less;
+            returnType = ValueCheckMode.Less;
         }
         if (containLessGraterEqual(text)) {
             throw new Error('Operatory porównania dla pojednynczego warunku mogą występować najwyżej jeden raz');
@@ -61,7 +60,7 @@ function chooseValueMode(text: string): ModeValue {
     if (firstPoint !== text.length - 1) {
         throw new Error('Znak \'.\' może być użyty tylko na końcu wartości lub atrybutu');
     } else {
-        return ModeValue.Exactly;
+        return ValueCheckMode.Exactly;
     }
 }
 
@@ -78,10 +77,8 @@ function parseWithAttributeCondition (condition: string): Filter {
                             .replace('!=', '')
                             .trim();
     return new AttributeFilter(
-        new TextFilterType(keyFilter),
-        chooseTextMode(attributeValue[0].trim()),
-        new ValueFilterType(valueFilter),
-        chooseValueMode(attributeValue[1].trim())
+        new TextFilterType(keyFilter, chooseTextMode(attributeValue[0].trim())),
+        new ValueFilterType(valueFilter, chooseValueMode(attributeValue[1].trim()))
     );
 }
 

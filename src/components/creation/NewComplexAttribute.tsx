@@ -5,7 +5,7 @@ import * as Modal from 'react-bootstrap/lib/Modal';
 import * as FormGroup from 'react-bootstrap/lib/FormGroup';
 import * as Col from 'react-bootstrap/lib/Col';
 import * as FormControl from 'react-bootstrap/lib/FormControl';
-import { ComplexAttrType } from '../types/ComplexAttrType';
+import { ComplexAttrType } from '../../types/creation/ComplexAttrType';
 import _ from 'lodash';
 
 interface NewComplexAttributeState {

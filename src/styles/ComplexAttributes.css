@@ -1,0 +1,51 @@
+.complexAttributes {
+    margin: 3%;
+}
+
+.attrTable {
+    margin-top: 4%;
+    margin-bottom:4%;
+}
+
+.complexAttrButtons {
+    margin-top: 2%;
+    float: right;
+    margin-bottom: 2%;
+    margin-left: 2%;
+}
+
+.newComplexAttrButton {
+    float: left;
+    margin-left: 0px;
+}
+
+.simpleAttrButton {
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.complexAttributeModalBody {
+    text-align: center;
+    margin-top: 2%;
+}
+
+.operatorButtonList {
+    text-align: center;
+    display: inline-block;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+.simpleAttrButtonList {
+    text-align: center;
+    display: inline-block;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+.newButton {
+    float: left;
+}
+
+.deleteComplexAttrButton{
+    float: left;
+}

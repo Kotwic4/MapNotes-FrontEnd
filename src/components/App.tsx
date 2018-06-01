@@ -1,18 +1,25 @@
-import MapMenu from './MapMenu';
 import * as React from 'react';
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { CreationMenu } from './creation/CreationMenu';
+import { MapMenu } from './map/MapMenu';
+import { HomeMenu } from './home/HomeMenu';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-class App extends React.Component<any, any> {
+export class App extends React.Component<{}, {}> {
 
     render() {
-        return (
-            <div className="App">
-                <MapMenu/>
-            </div>
+        return(
+            <Router>
+                <div className="container">
+                    <Route path="/map/:id" component={MapMenu} />
+                    <Route path="/create" component={CreationMenu}/>
+                    <Route exact={true} path="/" component={HomeMenu} />
+                </div>
+            </Router>
         );
     }
+
 }
-export default App;

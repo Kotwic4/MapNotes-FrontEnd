@@ -4,8 +4,8 @@ import * as FormControl from 'react-bootstrap/lib/FormControl';
 import * as ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormGroup } from 'react-bootstrap';
 import * as Col from 'react-bootstrap/lib/Col';
-import { Filter } from '../types/filter/Filter';
-import { parseFilterInput } from '../types/filter/parseFilterInput';
+import { Filter } from '../../../types/filter/Filter';
+import { parseFilterInput } from '../../../utils/filter/parseFilterInput';
 
 interface FilterState {
     input: string;
@@ -20,11 +20,13 @@ export default class FilterComponent extends React.Component<FilterComponentProp
 
     constructor(props: FilterComponentProps) {
         super(props);
-        this.onChangeFilterInput = this.onChangeFilterInput.bind(this);
-        this.filter = this.filter.bind(this);
+
         this.state = {
             input: '',
         };
+
+        this.filter = this.filter.bind(this);
+        this.onChangeFilterInput = this.onChangeFilterInput.bind(this);
     }
 
     onChangeFilterInput(event: any) {
@@ -35,10 +37,14 @@ export default class FilterComponent extends React.Component<FilterComponentProp
 
     filter() {
         const input = this.state.input;
-        if ( input === '') {
-            this.props.removeFilter();
-        } else {
-            this.props.filter(parseFilterInput(input));
+        try {
+            if ( input === '') {
+                this.props.removeFilter();
+            } else {
+                this.props.filter(parseFilterInput(input));
+            }
+        } catch (e) {
+            alert(e.message);
         }
     }
 

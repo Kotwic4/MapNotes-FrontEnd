@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { MapData } from '../types/MapData';
-import { BASE_URL } from '../constants';
-import { PinData } from '../types/PinData';
+import { MapData } from '../types/api/MapData';
+import { API_BASE_URL } from '../constants';
+import { PinData } from '../types/api/PinData';
 
-const MAP_URL = BASE_URL + '/map';
+const MAP_URL = API_BASE_URL + '/map';
 
 export function getAllMaps(cb: (maps: MapData[]) => void) {
     axios.get(MAP_URL)

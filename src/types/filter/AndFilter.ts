@@ -1,4 +1,4 @@
-import { PinData } from '../PinData';
+import { PinData } from '../api/PinData';
 import { Filter } from './Filter';
 
 export class AndFilter implements Filter {
@@ -10,12 +10,7 @@ export class AndFilter implements Filter {
     }
 
     doFilter(pin: PinData): boolean {
-        for (let filter of this.filters) {
-            if (!filter.doFilter(pin)) {
-                return false;
-            }
-        }
-        return true;
+        return this.filters.every((filter: Filter) => filter.doFilter(pin));
     }
 
 }

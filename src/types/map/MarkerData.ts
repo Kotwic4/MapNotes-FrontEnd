@@ -1,7 +1,5 @@
-import LatLng = google.maps.LatLng;
-
 export interface MarkerData {
-    position: LatLng;
+    position:  google.maps.LatLngLiteral;
     isWindowOpened: boolean;
     groupName: string;
     attributes: any;
