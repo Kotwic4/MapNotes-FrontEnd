@@ -131,7 +131,7 @@ export class TransportComponent extends React.Component<TransportComponentProps,
                     </Button>
                 </FormGroup>
                 <label>
-                    Distance: {this.state.currentDistance}
+                    Car distance: {this.state.currentDistance} km
                 </label>
             </div>
         );

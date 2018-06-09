@@ -14,9 +14,8 @@ export class AttributeFilter implements Filter {
     }
 
     doFilter(pin: PinData): boolean {
-        const keys = Object.keys(pin.data.attributes);
-        return keys.some((key: any) =>
-            this.keyFilter.checkValue(key) && this.valueFilter.checkValue(pin.data.attributes[key]));
+        return pin.data.attributes.some(value =>
+            this.keyFilter.checkValue(value.name) && this.valueFilter.checkValue(value.value));
     }
 
 }

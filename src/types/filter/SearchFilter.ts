@@ -11,8 +11,7 @@ export class SearchFilter implements Filter {
     }
 
     doFilter(pin: PinData): boolean {
-        const keys = Object.keys(pin.data.attributes);
-        return keys.some((key: any) =>
-            this.filter.checkValue(key) || this.filter.checkValue(pin.data.attributes[key]));
+        return pin.data.attributes.some(value =>
+            this.filter.checkValue(value.name) || this.filter.checkValue(value.value));
     }
 }

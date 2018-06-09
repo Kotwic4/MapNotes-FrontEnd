@@ -9,10 +9,10 @@ export enum ValueCheckMode {
 }
 
 export class ValueFilterType {
-    private value: String;
+    private value: string;
     private mode: ValueCheckMode;
 
-    constructor(value: String, mode: ValueCheckMode) {
+    constructor(value: string, mode: ValueCheckMode) {
         this.value = value;
         this.mode = mode;
     }
@@ -32,7 +32,10 @@ export class ValueFilterType {
             case ValueCheckMode.Exactly:
                 return value === this.value;
             case ValueCheckMode.Part:
-                return value.includes(this.value);
+                if (typeof value === 'string' || value instanceof String) {
+                    return value.includes(this.value);
+                }
+                return false;
             default:
                 return false;
         }

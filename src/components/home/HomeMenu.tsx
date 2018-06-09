@@ -25,14 +25,14 @@ export class HomeMenu extends React.Component<{}, HomeMenuState> {
         return(
             <ul>
                 {this.state.maps.map(map => {
-                    const id = map.id;
-                    const link = `/map/${map.id}`;
-                    return (
-                        <li key={id}>
-                            <Link to={link}>
-                                {id}
-                            </Link>
-                        </li>);
+                        const id = map.id;
+                        const link = `/map/${id}`;
+                        return (
+                            <li key={id}>
+                                <Link to={link}>
+                                    {id}
+                                </Link>
+                            </li>);
                     }
                 )}
             </ul>

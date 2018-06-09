@@ -1,7 +1,7 @@
-import { BasicAttr } from '../creation/BasicAttr';
-import { ComplexAttrType } from '../creation/ComplexAttrType';
+import { FormulaLists } from '../creation/FormulaLists';
+import { BasicAttrType } from '../BasicAttrType';
 
 export interface MapSettings {
-    attributes: BasicAttr[];
-    complexAttributes: Array<ComplexAttrType>;
+    attributes: Array<BasicAttrType>;
+    complexAttributes: Array<FormulaLists>;
 }

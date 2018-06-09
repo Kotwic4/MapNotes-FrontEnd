@@ -12,6 +12,8 @@ import { PinData } from '../../types/api/PinData';
 import { Filter } from '../../types/filter/Filter';
 import { deletePin } from '../../api/PinApi';
 import { MapSettings } from '../../types/map/MapSettings';
+import { removeFromStorage, setInStorage } from '../../utils/localStorage/localStorageUtils';
+import { MAP_ID_STORAGE } from '../../constants';
 
 export interface MapMenuProps {
     id: number;
@@ -22,6 +24,7 @@ export interface MapMenuState {
     filterPin?: PinData[];
     directions: any;
     leftBar: any;
+    leftBarComponentChild?: any;
 }
 
 export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, MapMenuState> {
@@ -42,10 +45,24 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
         this.addPin = this.addPin.bind(this);
         this.deleteMap = this.deleteMap.bind(this);
         this.updateMapSettings = this.updateMapSettings.bind(this);
+        this.showInLeftBar = this.showInLeftBar.bind(this);
     }
 
     componentWillMount() {
-        getMapById(this.props.match.params.id, map => this.setState({ map }));
+        getMapById(this.props.match.params.id,
+            map => {
+                setInStorage(MAP_ID_STORAGE, map.id);
+                this.setState({map});
+            },
+            () => {
+                removeFromStorage(MAP_ID_STORAGE);
+            });
+    }
+
+    showInLeftBar(leftBarComponentChild: any) {
+        this.setState({
+            leftBarComponentChild
+        });
     }
 
     filter(filter: Filter) {
@@ -60,11 +77,11 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
         const map = this.state.map;
         if (map && map.id) {
             pins.forEach(pin => {
-               map.pins.forEach((mapPin, index, mapPins) => {
-                   if (mapPin.id && mapPin.id === pin.id) {
-                       mapPins[index] = pin;
-                   }
-               });
+                map.pins.forEach((mapPin, index, mapPins) => {
+                    if (mapPin.id && mapPin.id === pin.id) {
+                        mapPins[index] = pin;
+                    }
+                });
             });
             putMap(map, newMap => this.setState({map: newMap}));
         }
@@ -75,7 +92,9 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
         if (map && map.id) {
             map.data = mapSettings;
             putMap(map, newMap => {
-                this.setState({map: newMap});
+                this.setState({
+                    map: newMap
+                });
             });
 
         }
@@ -112,7 +131,7 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
     deleteMap() {
         if (this.state.map && this.state.map.id) {
             deleteMapById(this.state.map.id, () => {
-                this.props.history.push('/');
+                this.props.history.push('/home');
             });
         }
     }
@@ -140,6 +159,8 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
                         changePins={this.changePins}
                         deleteMap={this.deleteMap}
                         callbackOnRef={(ref: any) => (this.setState({ leftBar: ref}))}
+                        leftBarComponentChild={this.state.leftBarComponentChild}
+                        showInLeftBar={this.showInLeftBar}
                     />
                     <MapContainer
                         map={this.state.map}
@@ -150,6 +171,7 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
                         directions={this.state.directions}
                         leftBar={this.state.leftBar}
                         updateMapSettings={this.updateMapSettings}
+                        showInLeftBar={this.showInLeftBar}
                     />
                 </div>
             );

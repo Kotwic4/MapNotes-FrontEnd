@@ -7,11 +7,11 @@ import * as Col from 'react-bootstrap/lib/Col';
 import * as FormControl from 'react-bootstrap/lib/FormControl';
 import { ComplexAttrType } from '../../types/creation/ComplexAttrType';
 import _ from 'lodash';
+import { OPERATORS } from '../../constants/index';
 
 interface NewComplexAttributeState {
     newComplexAttrName: string;
     newComplexAttrValue: string;
-    operators: Array<string>;
     simpleAttrAvailableNames: Array<string>;
 }
 
@@ -22,7 +22,6 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
         this.state = {
             newComplexAttrName: '',
             newComplexAttrValue: '',
-            operators: ['+', '-', '*', '/'],
             simpleAttrAvailableNames: this.props.simpleAttrAvailableNames,
         };
         this.createListOfButtonsWithSimpleAttr = this.createListOfButtonsWithSimpleAttr.bind(this);
@@ -95,7 +94,7 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
     }
 
     checkIfOperator(newAttr: string) {
-        return _.includes(this.state.operators, newAttr);
+        return _.includes(OPERATORS, newAttr);
     }
 
     onChangeAttributeNameInput(event: any) {
@@ -126,7 +125,7 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
         for (let i = 0; i < this.props.simpleAttr.length; i++) {
             if (this.props.simpleAttr[i].type === 'pln' || this.props.simpleAttr[i].type === 'm^2'
                 || this.props.simpleAttr[i].type === 'number') {
-                simpleAttButtons.push((
+                simpleAttButtons.push(
                     <Button
                         className={'simpleAttrButton'}
                         id={this.props.simpleAttr[i].name}
@@ -134,26 +133,22 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
                         onClick={this.onChangeAttributeValueInputForButtons}
                     > {this.props.simpleAttr[i].name}
                     </Button>
-                ));
+                );
             }
         }
         return simpleAttButtons;
     }
 
     createListOfButtonsWithOperands() {
-        let operatorButtons = [];
-        for ( let i = 0 ; i < this.state.operators.length ; i++ ) {
-            operatorButtons.push((
-                <Button
-                    className={'simpleAttrButton'}
-                    id={this.state.operators[i]}
-                    value={this.state.operators[i]}
-                    onClick={this.onChangeAttributeValueInputOperatorsForButtons}
-                > {this.state.operators[i]}
-                </Button>
-            ));
-        }
-        return operatorButtons;
+        return OPERATORS.map(operator => (
+            <Button
+                className={'simpleAttrButton'}
+                id={operator}
+                value={operator}
+                onClick={this.onChangeAttributeValueInputOperatorsForButtons}
+            > {operator}
+            </Button>
+        ));
     }
 
     handleClose() {
@@ -161,7 +156,6 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
             newComplexAttrName: '',
             newComplexAttrValue: '',
         });
-        console.log('close ');
         this.props.handleCloseAddNewAttrBox();
     }
 
@@ -187,7 +181,6 @@ export default class NewComplexAttribute extends React.Component<any, NewComplex
                 'value': this.state.newComplexAttrValue
             };
             this.props.handleClickSaveOnComplexAttrButton(complexAttr);
-            console.log('save');
             this.handleClose();
         }
     }

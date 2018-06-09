@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Button, Checkbox } from 'react-bootstrap';
-import { FormGroup, FormControl, Form, Col, ControlLabel,
-    MenuItem, DropdownButton } from 'react-bootstrap/lib';
+import { FormGroup, FormControl, Form, Col, ControlLabel } from 'react-bootstrap/lib';
 import { TYPES } from '../../../constants';
 
 export interface AddAttributeComponentProps {
@@ -10,7 +9,7 @@ export interface AddAttributeComponentProps {
 }
 
 export interface AddAttributeComponentState {
-    selected: string;
+    selectedType: string;
     isDefault: boolean;
     name: string;
 }
@@ -20,7 +19,7 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
     constructor(props: any) {
         super(props);
         this.state = {
-            selected: 'Choose type',
+            selectedType: 'Choose type',
             isDefault: false,
             name: ''
         };
@@ -30,11 +29,11 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
         this.handleSave = this.handleSave.bind(this);
     }
 
-    handleTypeChange(event: any) {
-        this.setState({selected: event.toString()});
+    handleTypeChange(selectedType: string) {
+        this.setState({selectedType});
     }
 
-    handleCheckbox(event: any) {
+    handleCheckbox() {
         this.setState({
             isDefault: !this.state.isDefault
         });
@@ -43,7 +42,7 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
 
     handleSave() {
         if (this.getValidationStateName() === 'success' && this.getValidationStateType() === 'success') {
-            this.props.save(this.state.name, this.state.selected, this.state.isDefault);
+            this.props.save(this.state.name, this.state.selectedType, this.state.isDefault);
         } else {
             alert('Fill out all mandatory fields');
         }
@@ -66,7 +65,7 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
     }
 
     getValidationStateType() {
-        if (this.state.selected === 'Choose type') {
+        if (this.state.selectedType === 'Choose type') {
             return 'error';
         } else {
             return 'success';
@@ -100,22 +99,7 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
                         <Col componentClass={ControlLabel} sm={2}>
                             Type
                         </Col>
-                        <Col sm={4}>
-                            <DropdownButton
-                                onSelect={this.handleTypeChange}
-                                title={this.state.selected}
-                                id="dropdown-size-medium"
-                            >
-                                {
-                                    TYPES.map(function(type: any) {
-                                        return (
-                                            <MenuItem key={type} eventKey={type.toString()}>
-                                                {type.toString()}
-                                            </MenuItem>);
-                                    })
-                                }
-                            </DropdownButton>
-                        </Col>
+                            {this.createButtonTypes()}
                     </FormGroup>
                     <FormGroup>
                         <Col smOffset={2} sm={4}>
@@ -132,5 +116,28 @@ export class AddNoteAttributeComponent extends React.Component<AddAttributeCompo
                 </Button>
             </div>
         );
+    }
+
+    createButtonTypes() {
+        const buttonTypes: JSX.Element[] = [];
+        const isButtonChoose = (type: string) => {return (this.state.selectedType === type); } ;
+
+        TYPES.map(type => {
+               buttonTypes.push(
+                    <Button
+                        className={'typeButton'}
+                        id={type}
+                        key={type}
+                        value={type}
+                        onClick={() => this.handleTypeChange(type)}
+                        active={isButtonChoose(type)}
+
+                    > {type.toString()}
+                    </Button>
+                );
+            }
+
+        );
+        return buttonTypes;
     }
 }

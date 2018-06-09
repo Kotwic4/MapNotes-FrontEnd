@@ -4,10 +4,10 @@ export enum TextCheckMode {
 }
 
 export class TextFilterType {
-    private value: String;
+    private value: string;
     private mode: TextCheckMode;
 
-    constructor(value: String, mode: TextCheckMode) {
+    constructor(value: string, mode: TextCheckMode) {
         this.value = value;
         this.mode = mode;
     }
@@ -17,7 +17,10 @@ export class TextFilterType {
             case TextCheckMode.Exactly:
                 return value === this.value;
             default:
-                return value.includes(this.value);
+                if (typeof value === 'string' || value instanceof String) {
+                    return value.includes(this.value);
+                }
+                return false;
         }
     }
 }

@@ -29,6 +29,10 @@ Information about how to start are [here](README-starter.md)
 We use google maps API on our app.
 One need to set environment variable REACT_APP_GOOGLE_MAP_KEY with proper key to make app works.
 
+### Backend API URL
+
+To run properly, app need environment variable REACT_APP_API_URL with link to backend server.
+
 ### CI
 
 Every commmit pushed to github is verified by Travis.

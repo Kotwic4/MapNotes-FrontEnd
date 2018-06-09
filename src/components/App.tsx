@@ -7,19 +7,20 @@ import { CreationMenu } from './creation/CreationMenu';
 import { MapMenu } from './map/MapMenu';
 import { HomeMenu } from './home/HomeMenu';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ChooseRouterPathComponent } from './ChooseRouterPathComponent';
 
 export class App extends React.Component<{}, {}> {
 
     render() {
-        return(
+        return (
             <Router>
                 <div className="container">
-                    <Route path="/map/:id" component={MapMenu} />
+                    <Route path="/map/:id" component={MapMenu}/>
                     <Route path="/create" component={CreationMenu}/>
-                    <Route exact={true} path="/" component={HomeMenu} />
+                    <Route path="/home" component={HomeMenu}/>
+                    <Route exact={true} path="/" component={ChooseRouterPathComponent}/>
                 </div>
             </Router>
         );
     }
-
 }

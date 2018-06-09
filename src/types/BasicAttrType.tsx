@@ -1,4 +1,4 @@
-export interface BasicAttr {
+export interface BasicAttrType {
     name: string;
     type: string;
 }
