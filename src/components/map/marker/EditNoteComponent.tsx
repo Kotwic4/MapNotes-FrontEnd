@@ -74,14 +74,16 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
         const operations = complexAttributeValue.opList;
 
         let mathOperation: string = '';
+        let currentOperationIndex = 0;
 
         simpleAttributeNames.forEach( (simpleAttributeName: string) => {
             const index = this.findIndexForAttributeName(simpleAttributeName);
             mathOperation += pin.data.attributes[index].value + ' ';
-            let nextOperator = operations.shift();
-            if (nextOperator !== undefined) {
+            if (currentOperationIndex < simpleAttributeName.length) {
+                let nextOperator = operations[currentOperationIndex];
                 mathOperation += nextOperator  + ' ';
             }
+            currentOperationIndex++;
         });
         return math.eval(mathOperation);
     }
