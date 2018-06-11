@@ -16,6 +16,7 @@ export interface EditNoteComponentProps {
     mapData: MapSettings;
     savePin: (pin: PinData) => void;
     updateMapSettings: (mapSettings: MapSettings) => void;
+    updatePin: (pin: PinData) => void;
     close: () => void;
 }
 
@@ -39,6 +40,7 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
         this.handleAddingNewAttribute = this.handleAddingNewAttribute.bind(this);
         this.handlePin = this.handlePin.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
     }
 
     findIndexForAttributeName(attributeName: string) {
@@ -48,6 +50,7 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
 
     handlePin() {
         const pin = this.props.pin;
+        console.log('pin', this.props.pin);
         const defaultAttr = this.props.mapData.attributes;
         defaultAttr.forEach(attribute => {
             const index = this.findIndexForAttributeName(attribute.name);
@@ -177,6 +180,7 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
 
     deleteEmptyInputs() {
         const pin = this.state.pin;
+        console.log('pin11', this.props.pin);
         pin.data.attributes = pin.data.attributes.filter(attr => {
                 return((attr.value !== '' && this.isBasicType(attr.type)) || !this.isBasicType(attr.type));
         }
@@ -185,6 +189,20 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
             pin,
             isAddNewAttrClick: false
         });
+    }
+
+    handleCancel() {
+        // const pin = this.state.pin;
+        // const attr = this.props.backupPin;
+        // pin.data.attributes = attr;
+        // console.log('pin22', pin);
+        // console.log('pinB22', this.props.backupPin);
+        // this.setState({pin});
+        console.log('pinCancel');
+        this.props.updatePin(this.state.pin);
+        this.forceUpdate();
+        // this.props.savePin(this.props.backupPin);
+
     }
 
     render() {
@@ -204,8 +222,8 @@ export class EditNoteComponent extends React.Component<EditNoteComponentProps, E
                     <Button
                         className="btn btn-secondary"
                         onClick={() => {
-
-                            this.deleteEmptyInputs();
+                            this.handleCancel();
+                            // this.deleteEmptyInputs();
                             this.props.close();
                         }}
                     >

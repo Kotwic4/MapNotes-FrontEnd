@@ -11,6 +11,7 @@ import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
 import { MapData } from '../../types/api/MapData';
 import { PinData } from '../../types/api/PinData';
 import { MapSettings } from '../../types/map/MapSettings';
+import { AttributeInfo } from '../../types/creation/AttributeInfo';
 
 export interface MapProps {
     markers: any;
@@ -68,12 +69,14 @@ export interface MapContainerProps {
     directions: any;
     leftBar: any;
     showInLeftBar: (component: any) => void;
+    getPinAttribute: (pin: PinData) => AttributeInfo[];
 }
 
 export interface MapContainerState {
     bounds: any;
     center: any;
     newPin?: PinData;
+    backupPin: any;
 }
 
 export class MapContainer extends React.Component<MapContainerProps, MapContainerState> {
@@ -87,6 +90,7 @@ export class MapContainer extends React.Component<MapContainerProps, MapContaine
         this.state = {
             bounds: null,
             center: null,
+            backupPin: [],
         };
 
         this.handleMapClick = this.handleMapClick.bind(this);
@@ -106,7 +110,7 @@ export class MapContainer extends React.Component<MapContainerProps, MapContaine
                 attributes: [],
             },
         };
-        this.setState({newPin});
+        this.setState({newPin, backupPin: []});
     }
 
     handleSearchBoxMounted(searchBox: any) {
@@ -159,15 +163,35 @@ export class MapContainer extends React.Component<MapContainerProps, MapContaine
 
     renderNewPin() {
         const pin = this.state.newPin;
+
         if (pin) {
+
             return (
                 <MarkerComponent
                     pin={pin}
                     mapData={this.props.map.data}
                     index={-1}
                     key={-1}
-                    savePin={this.props.addPin}
+                    savePin={(pinData) => {
+                        console.log('pin1', pin.data.attributes);
+                        console.log('pin2', pinData.data.attributes);
+                        this.props.addPin(pinData);
+                        const attribute = pin.data.attributes;
+                        console.log('backup:', this.state.backupPin );
+                        this.setState({backupPin: attribute});
+                        this.forceUpdate();
+                    }}
                     deletePin={() => this.setState({newPin: undefined})}
+                    updatePin={(pinData) => {
+                        const attr = this.props.getPinAttribute(pinData);
+                        console.log(attr);
+                        console.log('update1', this.state.backupPin);
+                        const newPin = pinData;
+                        console.log('newPinU1', newPin);
+                        // const attribute = this.state.backupPin;
+                        // pinData.data.attributes = attribute ;
+                        // this.setState({newPin});
+                    }}
                     updateMapSettings={(mapSetting) => this.props.updateMapSettings(mapSetting)}
                     showTransportComponent={this.showTransportComponent}
                     showInLeftBar={this.props.showInLeftBar}
@@ -185,7 +209,29 @@ export class MapContainer extends React.Component<MapContainerProps, MapContaine
                     index={index}
                     key={index}
                     savePin={(savePin) => {
+
+                        console.log('marker', pin.data.attributes);
+                        console.log('marker2', savePin.data.attributes);
                         this.props.changePins([savePin]);
+                        const backup = savePin.data.attributes;
+                        this.setState({backupPin: backup});
+                        // this.forceUpdate();
+                        console.log('backup:', this.state.backupPin );
+                    }}
+
+                    updatePin={(pinData) => {
+                        const attr = this.props.getPinAttribute(pinData);
+                        console.log(attr);
+                        console.log('update2', this.state.backupPin);
+                        const newPin = pinData;
+                        console.log('newPinU2', newPin);
+                        // if (pinData) {
+                        //     console.log('change');
+                        //     pinData.data.attributes = this.state.backupPin;
+                        //     console.log(pinData.data.attributes);
+                        // }
+                        // this.setState({newPin});
+                        // this.forceUpdate();
                     }}
                     updateMapSettings={(mapSetting) => this.props.updateMapSettings(mapSetting)}
                     deletePin={this.props.deletePin}

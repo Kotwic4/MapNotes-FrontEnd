@@ -15,6 +15,7 @@ import { deletePin } from '../../api/PinApi';
 import { MapSettings } from '../../types/map/MapSettings';
 import { removeFromStorage, setInStorage } from '../../utils/localStorage/localStorageUtils';
 import { MAP_ID_STORAGE } from '../../constants';
+import { AttributeInfo } from '../../types/creation/AttributeInfo';
 
 export interface MapMenuProps {
     id: number;
@@ -47,6 +48,7 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
         this.deleteMap = this.deleteMap.bind(this);
         this.updateMapSettings = this.updateMapSettings.bind(this);
         this.showInLeftBar = this.showInLeftBar.bind(this);
+        this.getPinAttribute = this.getPinAttribute.bind(this);
     }
 
     componentWillMount() {
@@ -86,6 +88,22 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
             });
             putMap(map, newMap => this.setState({map: newMap}));
         }
+    }
+
+    getPinAttribute(pin: PinData) {
+        console.log('getPin', pin);
+        let attribute: AttributeInfo[] = [];
+        const map = this.state.map;
+        if (map && map.id) {
+            console.log(map.pins);
+            map.pins.forEach((mapPin) => {
+                if (mapPin.id && mapPin.id === pin.id) {
+                    attribute = mapPin.data.attributes;
+                }
+            });
+        }
+        return attribute;
+
     }
 
     updateMapSettings(mapSettings: MapSettings) {
@@ -165,6 +183,7 @@ export class MapMenu extends React.Component<RouteComponentProps<MapMenuProps>, 
                     />
                     <MapContainer
                         map={this.state.map}
+                        getPinAttribute={this.getPinAttribute}
                         visiblePins={visiblePins}
                         addPin={this.addPin}
                         changePins={this.changePins}
