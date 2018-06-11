@@ -8,6 +8,7 @@ export interface ExtendNoteComponentProps {
     pin: PinData;
     mapData: MapSettings;
     savePin: (pin: PinData) => void;
+    updatePin: (pin: PinData) => void;
     updateMapSettings: (mapSettings: MapSettings) => void;
     showInLeftBar: (component: any) => void;
     deletePin: (pin: PinData) => void;
@@ -49,6 +50,7 @@ export class ExtendNoteComponent extends React.Component<ExtendNoteComponentProp
                 pin={this.props.pin}
                 mapData={this.props.mapData}
                 savePin={this.savePin}
+                updatePin={this.props.updatePin}
                 updateMapSettings={this.props.updateMapSettings}
                 close={() => this.setState({isEditMode: false})}
             />

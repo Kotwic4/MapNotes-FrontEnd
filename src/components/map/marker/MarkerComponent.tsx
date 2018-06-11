@@ -12,6 +12,7 @@ export interface MarkerComponentProps {
     key: any;
     savePin: (pin: PinData) => void;
     updateMapSettings: (mapSettings: MapSettings) => void;
+    updatePin: (pin: PinData) => void;
     deletePin: (pin: PinData) => void;
     showTransportComponent: (index: any) => void;
     showInLeftBar: (component: any) => void;
@@ -64,6 +65,7 @@ export class MarkerComponent extends React.Component<MarkerComponentProps, Marke
                 mapData={this.props.mapData}
                 savePin={this.savePin}
                 updateMapSettings={this.props.updateMapSettings}
+                updatePin={this.props.updatePin}
                 showInLeftBar={this.props.showInLeftBar}
                 deletePin={this.props.deletePin}
             />
